@@ -10,8 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.awesome.sherawat42.neverforget.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ListView
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/todoListView">
+    </ListView>
 </RelativeLayout>
