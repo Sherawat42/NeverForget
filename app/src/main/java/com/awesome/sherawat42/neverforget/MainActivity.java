@@ -19,11 +19,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listView = (ListView)findViewById(R.id.todoListView);
         todoList = new ArrayList<>();
         for(int i=0;i<20;i++){
             todoList.add(testTodo);
         }
-        listView = (ListView)findViewById(R.id.todoListView);
+        todoArrayAdapter = new TodoArrayAdapter(this, todoList);
         listView.setAdapter(todoArrayAdapter);
+//        ListView listView = (ListView) findViewById(R.id.expenseListView);
+////        adapter = new ArrayAdapter<>(this,R.layout.list_item,R.id.listItemTextView,expenses);
+//        adapter = new ExpenseAdapter(this,expenses);
+//        listView.setAdapter(adapter);
     }
 }
