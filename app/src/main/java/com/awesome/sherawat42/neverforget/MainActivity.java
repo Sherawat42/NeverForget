@@ -10,6 +10,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 // TODO (1) Add Support for change of time zone!!
+// TODO (2) Add the feature of going to next field after filling one field using keyboard and hide the keyboard on clicking elsewhere in the activity
 
 public class MainActivity extends AppCompatActivity {
 
