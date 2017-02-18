@@ -40,17 +40,19 @@ public class TodoArrayAdapter extends ArrayAdapter<Todo> {
 
 
 
-        TextView todoStringTV = (TextView)convertView.findViewById(R.id.todoStringTV);
+        TextView todoTitleTV = (TextView)convertView.findViewById(R.id.todoTitleTV);
         TextView creationTimeTV = (TextView)convertView.findViewById(R.id.creationTimeTV);
         TextView remindTimeTV = (TextView)convertView.findViewById(R.id.remindTimeTV);
         Todo todo = todoArrayList.get(position);
-//        todoStringTV.setText(todo.getMessage());
+        todoTitleTV.setText(todo.getTitle());
+        creationTimeTV.setText(todo.getcYear()+"/"+todo.getcMonth()+"/"+todo.getcDay()+", "+todo.getcHour()+":"+todo.getcMinute());
+
 
 
 //        todoStringTV.setText(todoArrayList.get(position).getMessage());
 //        creationTimeTV.setText("Created at "+todoArrayList.get(position).getCreationTime());
-        remindTimeTV.setText("remind time: " + "functionality to be added");
-        remindTimeTV.setText("remind time: " + "functionality to be added");
+        remindTimeTV.setText(todo.getrYear()+"/"+todo.getrMonth()+"/"+todo.getrDay()+", "+todo.getrHour()+":"+todo.getrMinute());
+
 
 
 

@@ -1,7 +1,9 @@
 package com.awesome.sherawat42.neverforget;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 
 import com.awesome.sherawat42.neverforget.Todo.Todo;
+import com.awesome.sherawat42.neverforget.Todo.TodoDbHandler;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     static int ADD_NEW_TODO;
     static ArrayList<Todo> todoList;
+    private static int todoCount;
+    private TodoDbHandler todoDbHandler;
+
 
     TodoArrayAdapter todoArrayAdapter;
     ListView listView;
@@ -29,17 +35,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView)findViewById(R.id.todoListView);
+        todoDbHandler = new TodoDbHandler(this);
         todoList = new ArrayList<>();
+        this.todoCount = TodoDbHandler.getTodoCount();
+        makeTodoListFromDB();
+        listView = (ListView)findViewById(R.id.todoListView);
         todoArrayAdapter = new TodoArrayAdapter(this, todoList);
         listView.setAdapter(todoArrayAdapter);
 //        ListView listView = (ListView) findViewById(R.id.expenseListView);
 ////        adapter = new ArrayAdapter<>(this,R.layout.list_item,R.id.listItemTextView,expenses);
 //        adapter = new ExpenseAdapter(this,expenses);
 //        listView.setAdapter(adapter);
+
     }
 
 //    Gson gson = new Gson();
+    private void makeTodoListFromDB(){
+        this.todoCount = TodoDbHandler.getTodoCount();
+        Todo todo;
+//        for(int i=0; i<100;i++){
+        for(int i=0; i<todoCount;i++){
+            todo = todoDbHandler.getTodo(i);
+            if(todo == null){
+                return;
+            }else{
+                todoList.add(todo);
+            }
+        }
+    }
 
 
     @Override

@@ -3,6 +3,9 @@ package com.awesome.sherawat42.neverforget.Todo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.playlog.internal.LogEvent;
 
 import static android.content.ContentValues.TAG;
 
@@ -18,6 +21,26 @@ public class TodoDbHandler {
     /** This application's storageSP editor*/
     private static SharedPreferences.Editor editor;
     /** Constructor takes an android.content.Context argument*/
+    private Context ctx;
+
+    private static String KEY_TODO_COUNT="countForAllTodosEverMade";
+    private static int todoCount;
+
+    private static void increseTodoCountBy1() {
+        if(storageSP == null || storageSP == null){
+            Log.e(TAG, "increseTodoCountBy1: There was an attempt to increase todo without initiailizing the class");
+            return;
+        }
+        todoCount++;
+        editor.putInt(KEY_TODO_COUNT,todoCount);
+        editor.commit();
+    }
+
+
+    public static int getTodoCount() {
+        return storageSP.getInt(KEY_TODO_COUNT,0);
+    }
+
     public TodoDbHandler(Context ctx){
         if(storageSP == null){
             storageSP = ctx.getSharedPreferences(PREFS_NAME,
@@ -29,6 +52,12 @@ public class TodoDbHandler {
         * and non-concurrent
         */
         editor = storageSP.edit();
+        this.ctx = ctx;
+        setTodoCount();
+    }
+
+    private void setTodoCount() {
+        todoCount = storageSP.getInt(KEY_TODO_COUNT,0);
     }
 
 
@@ -70,11 +99,11 @@ public class TodoDbHandler {
 
         int id = todo.getId();
 
-        editor.putInt(getFieldKey(id,KEY_cYear),todo.getrYear());
-        editor.putInt(getFieldKey(id,KEY_cMonth),todo.getrMonth());
-        editor.putInt(getFieldKey(id,KEY_cDay),todo.getrDay());
-        editor.putInt(getFieldKey(id,KEY_cHour),todo.getrHour());
-        editor.putInt(getFieldKey(id,KEY_cMin),todo.getrMinute());
+        editor.putInt(getFieldKey(id,KEY_cYear),todo.getcYear());
+        editor.putInt(getFieldKey(id,KEY_cMonth),todo.getcMonth());
+        editor.putInt(getFieldKey(id,KEY_cDay),todo.getcDay());
+        editor.putInt(getFieldKey(id,KEY_cHour),todo.getcHour());
+        editor.putInt(getFieldKey(id,KEY_cMin),todo.getcMinute());
         editor.putInt(getFieldKey(id,KEY_rYear),todo.getrYear());
         editor.putInt(getFieldKey(id,KEY_rMonth),todo.getrMonth());
         editor.putInt(getFieldKey(id,KEY_rDay),todo.getrDay());
@@ -84,12 +113,15 @@ public class TodoDbHandler {
         editor.putString(getFieldKey(id,KEY_NOTE),todo.getNote());
         editor.putBoolean(getFieldKey(id,KEY_SOFT_DELETE),false);
 
+
         editor.commit();
+        increseTodoCountBy1();
     }
 
 //    Retrieve todo
     public Todo getTodo(int id){
         if(storageSP.getBoolean(getFieldKey(id,KEY_SOFT_DELETE),true) == true){
+            Toast.makeText(ctx,"tring to get null todo",Toast.LENGTH_SHORT).show();
             return null;
         }
         String title = storageSP.getString(getFieldKey(id,KEY_TITLE),"");
@@ -108,6 +140,17 @@ public class TodoDbHandler {
         remindTimeArr[3] = storageSP.getInt(getFieldKey(id,KEY_rHour),-1);
         remindTimeArr[4] = storageSP.getInt(getFieldKey(id,KEY_rMin),-1);
 
-        return new Todo(remindTimeArr,remindTimeArr,title,note);
+        return new Todo(remindTimeArr,creationTimeArr,title,note);
+    }
+
+//    delete todo
+    public void softDeleteTodo(Todo todo){
+        if(todo == null){
+            Toast.makeText(ctx,"tring to delete null todo",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int id = todo.getId();
+        editor.putBoolean(getFieldKey(id,KEY_SOFT_DELETE),true);
+        editor.commit();
     }
 }

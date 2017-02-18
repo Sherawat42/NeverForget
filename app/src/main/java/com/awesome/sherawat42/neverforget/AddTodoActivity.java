@@ -2,6 +2,7 @@ package com.awesome.sherawat42.neverforget;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TimePicker;
 
 
 import com.awesome.sherawat42.neverforget.Todo.Todo;
+import com.awesome.sherawat42.neverforget.Todo.TodoDbHandler;
 
 import java.util.Calendar;
 
@@ -39,6 +41,10 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     int dHour = -1;
     int dMinute = -1;
 
+    private static TodoDbHandler todoDbHandler;
+
+
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -50,7 +56,11 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
 
-        setTitle("My title");
+        if(todoDbHandler == null){
+            todoDbHandler = new TodoDbHandler(this);
+        }
+
+        setTitle("Add TODO");
 
 
         c = Calendar.getInstance();
@@ -99,10 +109,11 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                 if(todoNoteEditText.getText().length() == 0){
                     newTodo = new Todo(arr,todoTitleEditText.getText().toString());
                 }else{
-                    newTodo = new Todo(arr,todoTitleEditText.getText().toString(),todoTitleEditText.getText().toString());
+                    newTodo = new Todo(arr,todoTitleEditText.getText().toString(),todoNoteEditText.getText().toString());
                 }
                 MainActivity.todoList.add(newTodo);
-//                final Gson gson = new Gson();
+                todoDbHandler.setTodo(newTodo);
+
                 Intent i = new Intent();
                 setResult(MainActivity.RESULT_OK,i);
                 finish();

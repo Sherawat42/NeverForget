@@ -42,6 +42,7 @@ public class Todo {
         c = Calendar.getInstance();
         this.note = note;
         setRemindTime(remindTimeArr);
+        setCreationTime();
 
         id = todoCount;
         setTodoCount(getTodoCount()+1);
