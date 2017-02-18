@@ -15,9 +15,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 
+import com.awesome.sherawat42.neverforget.Todo.Todo;
+
 import java.util.Calendar;
 
-public class AddTodo extends AppCompatActivity implements View.OnClickListener {
+public class AddTodoActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button datePickerBTN;
     Button timePickerBTN;
@@ -36,6 +38,8 @@ public class AddTodo extends AppCompatActivity implements View.OnClickListener {
     int dDay = -1;
     int dHour = -1;
     int dMinute = -1;
+
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -45,6 +49,8 @@ public class AddTodo extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
+
+        setTitle("My title");
 
 
         c = Calendar.getInstance();
@@ -59,7 +65,7 @@ public class AddTodo extends AppCompatActivity implements View.OnClickListener {
         submitBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder b = new AlertDialog.Builder(AddTodo.this);
+                AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
                 b.setTitle("There was an error");
                 View v1 = getLayoutInflater().inflate(R.layout.add_todo_error_dialogue_box, null);
                 b.setView(v1);

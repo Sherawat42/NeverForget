@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.awesome.sherawat42.neverforget.Todo.Todo;
+
 import java.util.ArrayList;
 
 /**

@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.awesome.sherawat42.neverforget.Todo.Todo;
+
 import java.util.ArrayList;
 
 // TODO (1) Add Support for change of time zone!!
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.add){
             Intent i = new Intent();
-            i.setClass(this,AddTodo.class);
+            i.setClass(this,AddTodoActivity.class);
             startActivityForResult(i,ADD_NEW_TODO);
         }
         return true;
