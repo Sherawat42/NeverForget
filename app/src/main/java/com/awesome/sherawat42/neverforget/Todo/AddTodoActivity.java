@@ -1,8 +1,7 @@
-package com.awesome.sherawat42.neverforget;
+package com.awesome.sherawat42.neverforget.Todo;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +15,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 
-import com.awesome.sherawat42.neverforget.Todo.Todo;
-import com.awesome.sherawat42.neverforget.Todo.TodoDbHandler;
+import com.awesome.sherawat42.neverforget.MainActivity;
+import com.awesome.sherawat42.neverforget.R;
 
 import java.util.Calendar;
 
@@ -75,48 +74,61 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         submitBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
-                b.setTitle("There was an error");
-                View v1 = getLayoutInflater().inflate(R.layout.add_todo_error_dialogue_box, null);
-                b.setView(v1);
-                TextView messageTV = (TextView) v1.findViewById(R.id.dialogTextView);
-                b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                });
                 c = Calendar.getInstance();
                 int x = dYear*600000+dMonth*45000+dDay*1500+dHour*60+dMinute;
                 int y = c.get(Calendar.YEAR)*600000 + c.get(Calendar.MONTH)*45000 + c.get(Calendar.DAY_OF_MONTH)*1500 + c.get(Calendar.HOUR_OF_DAY)*60 + c.get(Calendar.MINUTE);
                 if (todoTitleEditText.getText().length() == 0) {
+                    AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
+                    b.setTitle("There was an error");
+                    View v1 = getLayoutInflater().inflate(R.layout.basic_dialogue_box_, null);
+                    b.setView(v1);
+                    TextView messageTV = (TextView) v1.findViewById(R.id.dialogTextView);
+                    b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
                     messageTV.setText("There must be a title for the todo.");
                     AlertDialog aD = b.create();
                     aD.show();
                 } else if (dYear*600000+dMonth*45000+dDay*1500+dHour*60+dMinute <= c.get(Calendar.YEAR)*600000 + c.get(Calendar.MONTH)*45000 + c.get(Calendar.DAY_OF_MONTH)*1500 + c.get(Calendar.HOUR_OF_DAY)*60 + c.get(Calendar.MINUTE)) {
+                    AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
+                    b.setTitle("There was an error");
+                    View v1 = getLayoutInflater().inflate(R.layout.basic_dialogue_box_, null);
+                    b.setView(v1);
+                    TextView messageTV = (TextView) v1.findViewById(R.id.dialogTextView);
+                    b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
                     messageTV.setText("Time machine doesn't exist, so does the feature to make past time todo :P");
                     AlertDialog aD = b.create();
                     aD.show();
-                }
-
-                int arr[] = new int[5];
-                arr[0] = dYear;
-                arr[1] = dMonth;
-                arr[2] = dDay;
-                arr[3] = dHour;
-                arr[4] = dMinute;
-                Todo newTodo;
-                if(todoNoteEditText.getText().length() == 0){
-                    newTodo = new Todo(arr,todoTitleEditText.getText().toString());
                 }else{
-                    newTodo = new Todo(arr,todoTitleEditText.getText().toString(),todoNoteEditText.getText().toString());
-                }
-                MainActivity.todoList.add(newTodo);
-                todoDbHandler.setTodo(newTodo);
 
-                Intent i = new Intent();
-                setResult(MainActivity.RESULT_OK,i);
-                finish();
+
+                    int arr[] = new int[5];
+                    arr[0] = dYear;
+                    arr[1] = dMonth;
+                    arr[2] = dDay;
+                    arr[3] = dHour;
+                    arr[4] = dMinute;
+                    Todo newTodo;
+                    if(todoNoteEditText.getText().length() == 0){
+                        newTodo = new Todo(arr,todoTitleEditText.getText().toString());
+                    }else{
+                        newTodo = new Todo(arr,todoTitleEditText.getText().toString(),todoNoteEditText.getText().toString());
+                    }
+                    MainActivity.todoList.add(newTodo);
+                    todoDbHandler.setTodo(newTodo);
+
+                    Intent i = new Intent();
+                    setResult(MainActivity.RESULT_OK,i);
+                    finish();
+                }
             }
         });
     }

@@ -5,4 +5,13 @@
         app:showAsAction="always"
         android:id="@+id/add"
         />
+    <item
+       android:title="Call Developer"
+        app:showAsAction="never"
+        android:id="@+id/call_developer"/>
+    <item
+        android:title="Email developer"
+        app:showAsAction="never"
+        android:id="@+id/email_developer"/>
+
 </menu>

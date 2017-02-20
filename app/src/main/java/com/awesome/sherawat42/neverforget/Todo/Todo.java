@@ -1,5 +1,10 @@
 package com.awesome.sherawat42.neverforget.Todo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.Gson;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -7,9 +12,20 @@ import java.util.Calendar;
  * Created by sherawat42 on 12/2/17.
  */
 
-public class Todo {
+public class Todo implements Parcelable{
 
     private String title;
+
+//    TODO implement the parcelabel here!!
+//    public Todo(Parcel source) {
+//        this.title = source.readString();
+//        c = Calendar.getInstance();
+//        this.note = note;
+//        setRemindTime(remindTimeArr);
+//        setCreationTime(creationTimeArr);
+//        id = todoCount;
+//        setTodoCount(getTodoCount()+1);
+//    }
 
     public String getTitle() {
         return title;
@@ -193,4 +209,74 @@ public class Todo {
     public static void setTodoCount(int todoCount) {
         Todo.todoCount = todoCount;
     }
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     * @see #CONTENTS_FILE_DESCRIPTOR
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(cYear);
+        dest.writeInt(cMonth);
+        dest.writeInt(cDay);
+        dest.writeInt(cHour);
+        dest.writeInt(cMinute);
+
+        dest.writeInt(rYear);
+        dest.writeInt(rMonth);
+        dest.writeInt(rDay);
+        dest.writeInt(rHour);
+        dest.writeInt(rMinute);
+
+        dest.writeString(note);
+        dest.writeString(title);
+    }
+
+    public static final Parcelable.Creator<Todo> CREATOR = new Parcelable.Creator<Todo>(){
+
+        /**
+         * Create a new instance of the Parcelable class, instantiating it
+         * from the given Parcel whose data had previously been written by
+         * {@link Parcelable#writeToParcel Parcelable.writeToParcel()}.
+         *
+         * @param source The Parcel to read the object's data from.
+         * @return Returns a new instance of the Parcelable class.
+         */
+        @Override
+        public Todo createFromParcel(Parcel source) {
+            return null;
+//            return new Todo(source);
+        }
+
+        /**
+         * Create a new array of the Parcelable class.
+         *
+         * @param size Size of the array.
+         * @return Returns an array of the Parcelable class, with every entry
+         * initialized to null.
+         */
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[0];
+        }
+    };
 }
