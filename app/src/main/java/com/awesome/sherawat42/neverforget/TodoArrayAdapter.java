@@ -31,27 +31,40 @@ public class TodoArrayAdapter extends ArrayAdapter<Todo> {
     }
 
 
+    static class ViewHolder {
+        TextView todoTitleTV;
+        TextView creationTimeTV;
+        TextView remindTimeTV;
+        ViewHolder(TextView todoTitleTV, TextView creationTimeTV, TextView remindTimeTV) {
+            this.todoTitleTV = todoTitleTV;
+            this.creationTimeTV = creationTimeTV;
+            this.remindTimeTV = remindTimeTV;
+        }
+    }
+
+
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             convertView = View.inflate(mContext,R.layout.todo_item_list_view,null);
+            TextView todoTitleTV = (TextView)convertView.findViewById(R.id.todoTitleTV);
+            TextView creationTimeTV = (TextView)convertView.findViewById(R.id.creationTimeTV);
+            TextView remindTimeTV = (TextView)convertView.findViewById(R.id.remindTimeTV);
+            ViewHolder holder = new ViewHolder(todoTitleTV,creationTimeTV,remindTimeTV);
+            convertView.setTag(holder);
         }
+        ViewHolder holder = (ViewHolder)convertView.getTag();
 
-
-
-        TextView todoTitleTV = (TextView)convertView.findViewById(R.id.todoTitleTV);
-        TextView creationTimeTV = (TextView)convertView.findViewById(R.id.creationTimeTV);
-        TextView remindTimeTV = (TextView)convertView.findViewById(R.id.remindTimeTV);
         Todo todo = todoArrayList.get(position);
-        todoTitleTV.setText(todo.getTitle());
-        creationTimeTV.setText(todo.getcYear()+"/"+todo.getcMonth()+"/"+todo.getcDay()+", "+todo.getcHour()+":"+todo.getcMinute());
+        holder.todoTitleTV.setText(todo.getTitle());
+        holder.creationTimeTV.setText(todo.getcYear()+"/"+(todo.getcMonth()+1)+"/"+todo.getcDay()+", "+todo.getcHour()+":"+todo.getcMinute());
 
 
 
 //        todoStringTV.setText(todoArrayList.get(position).getMessage());
 //        creationTimeTV.setText("Created at "+todoArrayList.get(position).getCreationTime());
-        remindTimeTV.setText(todo.getrYear()+"/"+todo.getrMonth()+"/"+todo.getrDay()+", "+todo.getrHour()+":"+todo.getrMinute());
+        holder.remindTimeTV.setText(todo.getrYear()+"/"+(todo.getrMonth()+1)+"/"+todo.getrDay()+", "+todo.getrHour()+":"+todo.getrMinute());
 
 
 

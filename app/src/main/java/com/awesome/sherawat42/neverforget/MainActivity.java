@@ -1,10 +1,14 @@
 package com.awesome.sherawat42.neverforget;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -136,11 +140,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.add){
-            Intent i = new Intent();
-            i.setClass(this,AddTodoActivity.class);
-            startActivityForResult(i,ADD_NEW_TODO_REQUEST_CODE);
-        }else if(id == R.id.call_developer){
+        if(id == R.id.call_developer){
             Intent i = new Intent();
             i.setAction(Intent.ACTION_DIAL);
             Uri uri = Uri.parse("tel:+919643691758");
@@ -163,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        todoArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == ADD_NEW_TODO_REQUEST_CODE){
@@ -172,9 +178,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }else if(requestCode == UPDATE_TODO_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
-
+                todoArrayAdapter.notifyDataSetChanged();
                 Toast.makeText(this,"Todo updated successfully",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void addTodo(View view) {
+        Intent i = new Intent();
+        i.setClass(this,AddTodoActivity.class);
+        startActivityForResult(i,ADD_NEW_TODO_REQUEST_CODE);
     }
 }

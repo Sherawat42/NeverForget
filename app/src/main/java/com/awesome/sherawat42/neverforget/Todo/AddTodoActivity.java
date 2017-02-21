@@ -1,10 +1,14 @@
 package com.awesome.sherawat42.neverforget.Todo;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,12 +17,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 
 import com.awesome.sherawat42.neverforget.MainActivity;
 import com.awesome.sherawat42.neverforget.R;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class AddTodoActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +49,10 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     private static TodoDbHandler todoDbHandler;
 
 
+    private static AlarmManager am;
+    private static Intent alarmIntent;
+
+
 
 
     /**
@@ -61,6 +71,9 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
 
         setTitle("Add TODO");
 
+        am = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        alarmIntent = new Intent(AddTodoActivity.this,UpdateTodo.class);
+
 
         c = Calendar.getInstance();
         datePickerBTN = (Button) findViewById(R.id.set_date);
@@ -75,8 +88,8 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 c = Calendar.getInstance();
-                int x = dYear*600000+dMonth*45000+dDay*1500+dHour*60+dMinute;
-                int y = c.get(Calendar.YEAR)*600000 + c.get(Calendar.MONTH)*45000 + c.get(Calendar.DAY_OF_MONTH)*1500 + c.get(Calendar.HOUR_OF_DAY)*60 + c.get(Calendar.MINUTE);
+//                int x = dYear*600000+dMonth*45000+dDay*1500+dHour*60+dMinute;
+//                int y = c.get(Calendar.YEAR)*600000 + c.get(Calendar.MONTH)*45000 + c.get(Calendar.DAY_OF_MONTH)*1500 + c.get(Calendar.HOUR_OF_DAY)*60 + c.get(Calendar.MINUTE);
                 if (todoTitleEditText.getText().length() == 0) {
                     AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
                     b.setTitle("There was an error");
@@ -90,6 +103,21 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     });
                     messageTV.setText("There must be a title for the todo.");
+                    AlertDialog aD = b.create();
+                    aD.show();
+                }else if (dYear == -1 || dMinute == -1) {
+                    AlertDialog.Builder b = new AlertDialog.Builder(AddTodoActivity.this);
+                    b.setTitle("There was an error");
+                    View v1 = getLayoutInflater().inflate(R.layout.basic_dialogue_box_, null);
+                    b.setView(v1);
+                    TextView messageTV = (TextView) v1.findViewById(R.id.dialogTextView);
+                    b.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
+                    messageTV.setText("Please choose date and time.");
                     AlertDialog aD = b.create();
                     aD.show();
                 } else if (dYear*600000+dMonth*45000+dDay*1500+dHour*60+dMinute <= c.get(Calendar.YEAR)*600000 + c.get(Calendar.MONTH)*45000 + c.get(Calendar.DAY_OF_MONTH)*1500 + c.get(Calendar.HOUR_OF_DAY)*60 + c.get(Calendar.MINUTE)) {
@@ -125,12 +153,32 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
                     MainActivity.todoList.add(newTodo);
                     todoDbHandler.setTodo(newTodo);
 
+
+                    setAlarm(AddTodoActivity.this, newTodo);
+
+
                     Intent i = new Intent();
                     setResult(MainActivity.RESULT_OK,i);
                     finish();
                 }
             }
         });
+    }
+
+    public static void setAlarm(Context ctx, Todo todo){
+        alarmIntent.putExtra(MainActivity.INDEX_STRING,todo.getId());
+        //        PendingIntent operation = PendingIntent.getBroadcast(this,0,i,Intent.FLAG_ACTIVITY_NEW_TASK);
+        alarmIntent.putExtra(MainActivity.INDEX_STRING,todo.getId());
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent alarmOperation = PendingIntent.getActivity(ctx , 0, alarmIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        GregorianCalendar currentDay = new  GregorianCalendar (todo.getcYear(),todo.getcMonth(),todo.getcDay(),todo.getcHour(),todo.getcMinute(),0);
+        GregorianCalendar alarmDay = new GregorianCalendar(todo.getrYear(),todo.getrMonth(),todo.getrDay(),todo.getrHour(),todo.getrMinute(),0);
+        long millitime = alarmDay.getTimeInMillis()-currentDay.getTimeInMillis();
+        am.set(AlarmManager. ELAPSED_REALTIME ,
+                SystemClock.elapsedRealtime() + alarmDay.getTimeInMillis()-currentDay.getTimeInMillis(),
+                alarmOperation);
+        Toast.makeText(ctx,"alarm set: "+ (alarmDay.getTimeInMillis()-currentDay.getTimeInMillis()),Toast.LENGTH_SHORT).show();
     }
 
     @Override
