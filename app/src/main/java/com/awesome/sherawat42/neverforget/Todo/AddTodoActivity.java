@@ -49,11 +49,6 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     private static TodoDbHandler todoDbHandler;
 
 
-    private static AlarmManager am;
-    private static Intent alarmIntent;
-
-
-
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -70,9 +65,6 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         setTitle("Add TODO");
-
-        am = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        alarmIntent = new Intent(AddTodoActivity.this,UpdateTodo.class);
 
 
         c = Calendar.getInstance();
@@ -166,6 +158,7 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public static void setAlarm(Context ctx, Todo todo){
+        Intent alarmIntent = new Intent(ctx ,UpdateTodo.class);
         alarmIntent.putExtra(MainActivity.INDEX_STRING,todo.getId());
         //        PendingIntent operation = PendingIntent.getBroadcast(this,0,i,Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra(MainActivity.INDEX_STRING,todo.getId());
@@ -175,10 +168,13 @@ public class AddTodoActivity extends AppCompatActivity implements View.OnClickLi
         GregorianCalendar currentDay = new  GregorianCalendar (todo.getcYear(),todo.getcMonth(),todo.getcDay(),todo.getcHour(),todo.getcMinute(),0);
         GregorianCalendar alarmDay = new GregorianCalendar(todo.getrYear(),todo.getrMonth(),todo.getrDay(),todo.getrHour(),todo.getrMinute(),0);
         long millitime = alarmDay.getTimeInMillis()-currentDay.getTimeInMillis();
-        am.set(AlarmManager. ELAPSED_REALTIME ,
-                SystemClock.elapsedRealtime() + alarmDay.getTimeInMillis()-currentDay.getTimeInMillis(),
+        AlarmManager am = (AlarmManager)ctx.getSystemService(Context.ALARM_SERVICE);
+        long systemTime = System.currentTimeMillis();
+//        if(ctx.)
+        am.set(AlarmManager.RTC_WAKEUP ,
+                 alarmDay.getTimeInMillis(),
                 alarmOperation);
-        Toast.makeText(ctx,"alarm set: "+ (alarmDay.getTimeInMillis()-currentDay.getTimeInMillis()),Toast.LENGTH_SHORT).show();
+        Toast.makeText(ctx,"alarm set: "+ (alarmDay.getTimeInMillis()-systemTime),Toast.LENGTH_SHORT).show();
     }
 
     @Override

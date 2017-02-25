@@ -53,12 +53,18 @@ public class UpdateTodo extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_update_todo);
 
 
+
         setTitle("Update todo");
         Intent i = getIntent();
-        todo = MainActivity.todoList.get(i.getIntExtra(MainActivity.INDEX_STRING,0));
+
         if(todoDbHandler == null){
             todoDbHandler = new TodoDbHandler(this);
         }
+        if(MainActivity.todoList == null){
+            MainActivity.makeTodoListFromDB(todoDbHandler);
+        }
+
+        todo = MainActivity.todoList.get(i.getIntExtra(MainActivity.INDEX_STRING,0));
 
         c = Calendar.getInstance();
         datePickerBTN = (Button) findViewById(R.id.set_date);
@@ -131,6 +137,7 @@ public class UpdateTodo extends AppCompatActivity implements View.OnClickListene
                     todoDbHandler.setTodo(todo);
                     Intent i = new Intent();
                     setResult(MainActivity.RESULT_OK,i);
+                    AddTodoActivity.setAlarm(UpdateTodo.this, todo);
                     finish();
                 }
             }

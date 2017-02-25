@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         todoDbHandler = new TodoDbHandler(this);
         todoList = new ArrayList<>();
         this.todoCount = TodoDbHandler.getTodoCount();
-        makeTodoListFromDB();
+        makeTodoListFromDB(todoDbHandler);
         listView = (ListView)findViewById(R.id.todoListView);
         todoArrayAdapter = new TodoArrayAdapter(this, todoList);
         listView.setAdapter(todoArrayAdapter);
@@ -116,9 +116,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //    Gson gson = new Gson();
-    private void makeTodoListFromDB(){
-        this.todoCount = TodoDbHandler.getTodoCount();
+    public static void makeTodoListFromDB( TodoDbHandler todoDbHandler){
+        MainActivity.todoCount = TodoDbHandler.getTodoCount();
         Todo todo;
+        if(MainActivity.todoList == null){
+            todoList = new ArrayList<>();
+        }
 //        for(int i=0; i<100;i++){
         for(int i=0; i<todoCount;i++){
             todo = todoDbHandler.getTodo(i);

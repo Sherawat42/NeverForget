@@ -9,5 +9,4 @@
         android:title="Email developer"
         app:showAsAction="never"
         android:id="@+id/email_developer"/>
-
 </menu>
